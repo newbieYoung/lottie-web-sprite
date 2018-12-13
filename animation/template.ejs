@@ -1,0 +1,20 @@
+var opt = {
+    width: <%= size.width %>,
+    height: <%= size.height %>,
+    src: '<%= realpath %>',
+    count: <%= items.length %>,
+    items: [
+        <% items.forEach(function(item, idx) { -%>
+        {
+            index: <%= idx %>,
+            name: '<%= item.name %>',
+            width: <%= item.size.width %>,
+            height: <%= item.size.height %>,
+            x: <%= item.x %>,
+            y: <%= item.y %>
+        },
+        <% }) -%>
+    ]
+}
+
+module.exports = opt;

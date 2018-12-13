@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>使用精灵图的lottie动画</title>
+    <style type="text/css">
+        div{
+            width:140px;
+            height:140px;
+        }
+    </style>
+</head>
+<body>
+    <div id="animation"></div>
+
+    <script src="./lib/lottie-sprite.js"></script>
+    <script type="text/javascript">
+        window.onload = function(){
+
+            var animation = document.querySelector('#animation');
+            lottie.loadAnimation({
+                container: animation,
+                renderer: 'canvas',
+                loop: true,
+                autoplay: true,
+                path: './animation/data_sprite.json'
+            });
+        }
+    </script>
+</body>
+</html>
