@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>先预加载相关资源 然后再初始化动画</title>
+    <style type="text/css">
+        div{
+            width:280px;
+            height:280px;
+        }
+    </style>
+</head>
+<body>
+<div id="animation"></div>
+<script src="./lib/lottie-sprite.js"></script>
+<script type="text/javascript">
+    window.onload = function(){
+
+        //动态加载json文件
+        function formatResponse(xhr){
+            if(xhr.response && typeof xhr.response === 'object') {
+                return xhr.response;
+            } else if(xhr.response && typeof xhr.response === 'string') {
+                return JSON.parse(xhr.response);
+            } else if(xhr.responseText) {
+                return JSON.parse(xhr.responseText);
+            }
+        }
+        function loadJSON(src, callback){
+            var response;
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', src, true);
+            xhr.send();
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4) {
+                    response = formatResponse(xhr);
+                    callback(response);
+                }
+            };
+        }
+
+        //动态加载图片
+        function loadImage(src,callback){
+            var img = new Image();
+            img.src = src;
+            img.onload = function(){
+                callback(img);
+            };
+        }
+
+        //预加载相关资源
+        var $animation = document.querySelector('#animation');
+        var spriteImage;
+        var animationData;
+        loadImage('./animation/build/sprite.png',function(img){
+            spriteImage = img;
+            initAnimation($animation,spriteImage,animationData);
+        });
+        loadJSON('./animation/data_sprite.json',function(data){
+            animationData = data;
+            initAnimation($animation,spriteImage,animationData);
+        });
+
+        //初始化动画
+        function initAnimation(container,spriteImage,animationData){
+            console.log('---');
+            console.log(spriteImage);
+            console.log(animationData);
+            if(spriteImage&&animationData){
+                lottie.loadAnimation({
+                    container: container,
+                    renderer: 'canvas',
+                    loop: true,
+                    autoplay: true,
+                    animationData: animationData,
+                    _spriteSrc:spriteImage,
+                });
+            }
+        }
+    }
+</script>
+</body>
+</html>
